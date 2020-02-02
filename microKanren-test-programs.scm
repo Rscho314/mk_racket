@@ -1,3 +1,7 @@
+#lang racket
+
+(require "microKanren.scm")
+(provide (all-defined-out))
 
 (define-syntax test-check
   (syntax-rules ()
@@ -7,9 +11,12 @@
        (let* ((expected expected-result)
               (produced tested-expression))
          (or (equal? expected produced)
-             (errorf 'test-check
+             #;(errorf 'test-check
                "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
-               'tested-expression expected produced)))))))
+               'tested-expression expected produced)
+             (raise-result-error 'test-check
+                                 "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
+                                 'tested-expression expected produced)))))))
 
 (define a-and-b
   (conj 

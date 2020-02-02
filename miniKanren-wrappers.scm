@@ -1,3 +1,7 @@
+#lang racket
+
+(require "microKanren.scm")
+(provide (all-defined-out))
 
 ;;;; How to make a simple miniKanren (substitution only)
 
@@ -91,7 +95,7 @@
 
 ;;; Test programs
 
-(define-syntax test-check
+#;(define-syntax test-check
   (syntax-rules ()
     ((_ title tested-expression expected-result)
      (begin
@@ -99,11 +103,14 @@
        (let* ((expected expected-result)
               (produced tested-expression))
          (or (equal? expected produced)
-             (errorf 'test-check
+             #;(errorf 'test-check
                "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
-               'tested-expression expected produced)))))))
+               'tested-expression expected produced)
+             (raise-result-error 'test-check
+                                 "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
+                                 'tested-expression expected produced)))))))
 
-(define (appendo l s out)
+#;(define (appendo l s out)
   (conde
     ((== '() l) (== s out))
     ((fresh (a d res)
@@ -111,7 +118,7 @@
        (== `(,a . ,res) out)
        (appendo d s res)))))
 
-(test-check 'run*
+#;(test-check 'run*
   (run* (q) (fresh (x y) (== `(,x ,y) q) (appendo x y '(1 2 3 4 5))))
   '((() (1 2 3 4 5))
     ((1) (2 3 4 5))
@@ -120,7 +127,7 @@
     ((1 2 3 4) (5))
     ((1 2 3 4 5) ())))
 
-(test-check 'run*2
+#;(test-check 'run*2
   (run* (q x y) (== `(,x ,y) q) (appendo x y '(1 2 3 4 5)))
   '((() (1 2 3 4 5))
     ((1) (2 3 4 5))
@@ -129,7 +136,7 @@
     ((1 2 3 4) (5))
     ((1 2 3 4 5) ())))
   
-(test-check 'rember*o
+#;(test-check 'rember*o
   (letrec
       ((rember*o (lambda (tr o)
                    (conde
@@ -157,7 +164,7 @@
       (1 8 2 8 3 4 5)
       (8 1 2 8 3 4 5)))
 
-(test-check 'rember*o
+#;(test-check 'rember*o
   (letrec
       ((rember*o (lambda (tr o)
                    (conde
